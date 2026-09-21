@@ -4,8 +4,8 @@ class Spitze{
   
   PImage spitzeOben;
   PImage spitzeUnten;
-  float bildBreite;
-  float bildHöhe;
+  float spitzeBreite;
+  float spitzeHoehe;
   float spitzeX;
   float spitzeY;
 
@@ -17,22 +17,43 @@ class Spitze{
   }
   
   void zeichne(){
-    bildBreite = spitzeUnten.width * width / hintergrund.hintergrund.width; // ?
-    bildHöhe = spitzeUnten.height *  height / hintergrund.hintergrund.height; // ?
-    image(spitzeOben, spitzeX, spitzeY + luecke/2, bildBreite, bildHöhe);
-    image(spitzeUnten, spitzeX, spitzeY - bildHöhe - luecke/2, bildBreite, bildHöhe);
+    spitzeBreite = spitzeUnten.width * width / hintergrund.hintergrund.width; // ?
+    spitzeHoehe = spitzeUnten.height *  height / hintergrund.hintergrund.height; // ?
+    image(spitzeOben, spitzeX, spitzeY + luecke/2, spitzeBreite, spitzeHoehe);
+    image(spitzeUnten, spitzeX, spitzeY - spitzeHoehe - luecke/2, spitzeBreite, spitzeHoehe);
   }
   
   void bewege(){
     spitzeX -= geschwindigkeit;
     
-    if (spitzeX <= 0 - bildBreite){
+    if (spitzeX <= 0 - spitzeBreite){
       spitzeX = width;
       randomYHoehe();
     }
   }
   
   void randomYHoehe(){
-    spitzeY = random(height / 9, height / 10 * 6);
+    spitzeY = random(height / 7, height / 10 * 6);
+  }
+  
+  boolean kollision(float x, float y, float breite, float hoehe){
+    
+    // obere Spitze
+    if(x < spitzeX + spitzeBreite && 
+       x + breite > spitzeX &&
+       y < spitzeY - luecke/2 &&
+       y + hoehe > spitzeY - luecke/2 - spitzeHoehe){
+       println("oben");
+      return true;
+    // untere Spitze
+    } else if (x < spitzeX + spitzeBreite && // ?
+       x + breite > spitzeX &&
+       y < spitzeY + luecke/2 + spitzeHoehe &&
+       y + hoehe > spitzeY + luecke/2){
+       println("unten");  
+      return true;
+    } else {
+      return false;
+    }   
   }
 }

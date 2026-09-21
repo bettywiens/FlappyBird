@@ -8,36 +8,59 @@ class Flappy {
   };
 
   float size = 0.4f;
+  float animationsZeit = 0.2f;
+  float fallGeschwindigkeit = 0.4;
+  float sprung = 1.5;
+  
   PImage[] flappy;
   float flappyX;
   float flappyY;
   float flappyBreite;
   float flappyHoehe;
   int animation;
-  float deltaTime;
-  float time;
+  float deltaZeit;
+  float zeit;
+  float yGeschwindigkeit;
+  
 
   Flappy() {
     animation = 0;
-    time = 0;
+    zeit = 0;
     flappy = new PImage[bildPfad.length];
     for (int i = 0; i < bildPfad.length; i++){
       flappy[i] = loadImage(bildPfad[i]);
     }
-    
-    flappyX = 100;
-    flappyY = 100;
+    yGeschwindigkeit = 0;
+    flappyX = startFlappyX;
+    flappyY = startFlappyY;
+
   }
   
   void zeichne(){
     flappyBreite = flappy[0].width * width / hintergrund.hintergrund.width *  size;
     flappyHoehe = flappy[0].height * height / hintergrund.hintergrund.height * size;
-    image(flappy[0], flappyX, flappyY, flappyBreite, flappyHoehe);
+    image(flappy[animation], flappyX, flappyY, flappyBreite, flappyHoehe);
   }
   
   void bewege(){
-    deltaTime = millis();
-    time += deltaTime;
+    yGeschwindigkeit += fallGeschwindigkeit;
+    flappyY += yGeschwindigkeit;
+    
+    deltaZeit = 1/frameRate;
+    zeit += deltaZeit;
+    
+    if (zeit >= animationsZeit){
+      animation++;
+      if (animation >= bildPfad.length){
+        animation = 0;
+      }
+    }
+    
+    if(keyPressed){
+      if(key == ' '){
+        yGeschwindigkeit -= sprung;
+      }
+    }
   }
   
 }
