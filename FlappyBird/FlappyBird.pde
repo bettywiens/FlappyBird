@@ -1,10 +1,13 @@
 int screenBreite = 800;
 int screenHöhe = 600;
 float geschwindigkeit = 4;
-float luecke = 150;
+float luecke = 200;
 int spitzenNummer = 2;
 float startFlappyX = 100;
 float startFlappyY = 100;
+String playKnopfPfad = "C:/Users/bwiens/Documents/GitHub/FlappyBird/data/button/play.png";
+float playKnopfX = width / 2 + 0.3 * width;
+float playKnopfY = height / 2 + 0.6 * height;
 
 boolean spielGestartet = false;
 
@@ -13,6 +16,7 @@ Hintergrund hintergrund;
 Boden boden;
 Spitze spitze[];
 Flappy flappy;
+Knopf knopf;
 
 
 void setup() {
@@ -24,11 +28,13 @@ void setup() {
     spitze[i] = new Spitze(i);
   }
   flappy = new Flappy();
+  knopf = new Knopf(playKnopfPfad);
+  knopf.setzePosition(playKnopfX, playKnopfY);
 }
 
 void draw() {
   hintergrund.zeichne();
-
+  
   if (spielGestartet) {
     for (int i = 0; i < spitzenNummer; i++) {
       spitze[i].zeichne();
@@ -40,7 +46,14 @@ void draw() {
     boden.bewege();
     flappy.bewege();
   }
-
-  flappy.zeichne();
   boden.zeichne();
+  flappy.zeichne();
+
+  if (!spielGestartet) {
+    knopf.zeichne();
+    if (knopf.angeklickt()) {
+      println("starten...");
+      spielGestartet = true;
+    }
+  }
 }
