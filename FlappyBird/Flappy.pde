@@ -8,7 +8,7 @@ class Flappy {
   };
 
   float size = 0.4f;
-  float animationsZeit = 0.2f;
+  float animationsZeit = 80f;
   float fallGeschwindigkeit = 0.4;
   float sprung = 1.5;
 
@@ -20,6 +20,7 @@ class Flappy {
   int animation;
   float deltaZeit;
   float zeit;
+  float diffZeit;
   float yGeschwindigkeit;
 
 
@@ -45,11 +46,12 @@ class Flappy {
     yGeschwindigkeit += fallGeschwindigkeit;
     flappyY += yGeschwindigkeit;
 
-    deltaZeit = 1/frameRate;
-    zeit += deltaZeit;
+    deltaZeit = millis();
+    diffZeit = deltaZeit - zeit; 
 
-    if (zeit >= animationsZeit) {
+    if (diffZeit >= animationsZeit) {
       animation++;
+      zeit += diffZeit;
       if (animation >= bildPfad.length) {
         animation = 0;
       }

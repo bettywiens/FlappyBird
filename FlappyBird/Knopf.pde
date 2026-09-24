@@ -4,10 +4,13 @@ class Knopf {
   float positionY;
   float bildBreite;
   float bildHoehe;
+  float faktor;
   boolean mausIstGedrueckt = false;
 
-  Knopf(String bildPfad) {
+  Knopf(String bildPfad, float faktor) {
     knopfBild = loadImage(bildPfad);
+    bildBreite = knopfBild.width * faktor;
+    bildHoehe = knopfBild.height * faktor;
   }
   
   void setzeBildGroesse(float bildBreite, float bildHoehe){
@@ -39,7 +42,7 @@ class Knopf {
   }
 
   boolean istMausAufKnopf() {
-    if (mouseX > positionX && mouseX < (positionX + knopfBild.width) && mouseY > positionY && mouseY < (positionY + knopfBild.height)) {
+    if (mouseX > positionX && mouseX < (positionX + bildBreite) && mouseY > positionY && mouseY < (positionY + bildHoehe)) {
       return true;
     }
     return false;

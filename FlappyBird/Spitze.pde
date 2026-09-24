@@ -12,7 +12,7 @@ class Spitze {
   Spitze(int nummer) {
     spitzeOben = loadImage(bildPfadOben);
     spitzeUnten = loadImage(bildPfadUnten);
-    spitzeX = width / spitzenNummer * (nummer + 1);
+    spitzeX = (width / spitzenNummer * (nummer + 1));
     randomYHoehe(); // ?
   }
 
@@ -43,14 +43,58 @@ class Spitze {
       x + breite > spitzeX &&
       y < spitzeY - luecke/2 &&
       y + hoehe > spitzeY - luecke/2 - spitzeHoehe) {
-      println("oben");
+      
       return true;
       // untere Spitze
     } else if (x < spitzeX + spitzeBreite && // ?
       x + breite > spitzeX &&
       y < spitzeY + luecke/2 + spitzeHoehe &&
       y + hoehe > spitzeY + luecke/2) {
-      println("unten");
+      
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  boolean binVorbeiRechts(float x) {
+    if (x > spitzeX + spitzeBreite) {
+      //println("bin vorbei rechts");
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+    boolean treffeRechts(float x) {
+    if (x == spitzeX + spitzeBreite) {
+      println("treffe rechts");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  boolean binVorbeiLinks(float x) {
+    if (x > spitzeX) {
+      //println("Bin vorbei links");
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  boolean stoßeObenAn(float y){
+    if(y < spitzeY + spitzeHoehe){
+      
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  boolean stoßeUntenAn(float y){
+    if(y > spitzeY){
       return true;
     } else {
       return false;

@@ -1,6 +1,6 @@
 class Boden {
 
-  String bildPfad = "C:/Users/bwiens/Documents/GitHub/FlappyBird/data/background/layer_floor.png";
+  String bildPfad = "C:/Users/bwiens/Documents/GitHub/FlappyBird/data/background/layer_floor.jpg";
 
   PImage boden1;
   PImage boden2;
@@ -14,11 +14,13 @@ class Boden {
   Boden() {
     boden1 =loadImage(bildPfad);
     boden2 =loadImage(bildPfad);
+    boden1Y = height - 0.1 * height;
+    boden2Y = height - 0.1 * height;
   }
 
   void zeichne() {
-    image(boden1, boden1X, boden1Y, width, height);
-    image(boden2, boden2X, boden2Y, width, height);
+    image(boden1, boden1X, boden1Y, width, 0.1* height);
+    image(boden2, boden2X, boden2Y, width, 0.1 *height);
   }
 
   void bewege() {
@@ -31,6 +33,14 @@ class Boden {
 
     if (boden2X <= -width) {
       boden2X = width + boden1X; // ?
+    }
+  }
+  
+ boolean kollision(float y, float hoehe) {
+    if (y + hoehe > boden1Y + boden1.height || y + hoehe > boden2Y) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
