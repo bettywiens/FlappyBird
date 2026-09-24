@@ -2,12 +2,13 @@ int screenBreite = 800;
 int screenHöhe = 600;
 float startFlappyX = 200;
 float startFlappyY = 100;
-int punkte = 0;
+int punktzahl = 10;
 int leben;
-float geschwindigkeit = 2;
+float geschwindigkeit = 3;
 float luecke = 200;
 int spitzenNummer = 2;
 int jetzigeSpitze;
+int punktCounter;
 float herzenFaktor = 0.2;
 // Bildpfade:
 String playKnopfPfad = "C:/Users/bwiens/Documents/GitHub/FlappyBird/data/button/play.png";
@@ -40,10 +41,12 @@ boolean istErsterStart = true;
 boolean habenKollidiert = false;
 boolean bodenGetroffen = false;
 boolean istGameOver = false;
-boolean erfolgreicherDurchflug = true;
+boolean erfolgreicherDurchflug = false;
 boolean spielGestartet = false;
 boolean neueSpitze = false;
+boolean warSchonLinksVorbei = false;
 
+Punkte punkte;
 Hintergrund hintergrund;
 Boden boden;
 Spitze spitze[];
@@ -61,6 +64,7 @@ Herzen herzen;
 void setup() {
   //imageMode(CENTER);
   size(800, 600);
+  punktCounter = 0;
   leben = 3;
   /// KNÖPFE ///
   // Play-Knopf:
@@ -93,6 +97,10 @@ void setup() {
   herzen = new Herzen(herzenFaktor, leben);
   herzen.setzePosition(mitteX(herzen.bildBreite), 20);
 
+  punkte = new Punkte(0.2, punktzahl);
+  punkte.setzePositionStelle1(width - punkte.bildBreiteStelle2 - 50, 20);
+  punkte.setzePositionStelle2(width - 50, 20);
+
   hintergrund = new Hintergrund();
   boden = new Boden();
   flappy = new Flappy();
@@ -120,7 +128,8 @@ void spiel() {
 
 void spielStarten() {
   if (spielGestartet) {
-    // Punkte Zeichnen
+    punkte.zeichneStelle1();
+    punkte.zeichneStelle2();
     flappy.zeichne();
     homeKnopf.zeichne();
     herzen.zeichne();
@@ -190,8 +199,6 @@ void spitzen() {
     spitze[i].zeichne();
     spitze[i].bewege();
     //println("flappyX = "+ flappy.flappyX);
-    
-
     homeKnopf.zeichne();
     herzen.zeichne();
 
@@ -200,25 +207,30 @@ void spitzen() {
         leben--;
         setzeHerzen(leben, herzenFaktor);
         habenKollidiert = true;
-        erfolgreicherDurchflug = false;
       }
       if (!spitze[i].binVorbeiLinks(flappy.flappyX + (flappy.flappyBreite / 2))) {
         flappy.flappyX = spitze[i].spitzeX - flappy.flappyBreite;
       }
     }
-
-    if ((spitze[i].spitzeX) == flappy.flappyX) {
-      println("treffe rechts");
-      println(spitze[i].spitzeX);
-      if (erfolgreicherDurchflug) {
-        punkte++;
-        println(punkte);
-      } else {
-        erfolgreicherDurchflug = true;
+    if(spitze[i].binVorbeiRechts(flappy.flappyX)){ 
+      punktCounter++;
+      println(punktCounter);
+      if(punktCounter == 1){
+        punktzahl++;
+        setzePunkte(punktzahl,0.2);
       }
+      //punktCounter = 0;
     }
-    if (spitze[i].binVorbeiRechts(flappy.flappyX)){      
+    if(spitze[i].binVorbeiLinksGrenze(flappy.flappyX)){
+      punktCounter = 0;
+    }
+    
+
+    if (spitze[i].binVorbeiRechts(flappy.flappyX)) {
       habenKollidiert = false;
+    }
+    if (spitze[i].treffeLinks(flappy.flappyX, flappy.flappyBreite)) {
+      warSchonLinksVorbei = false;
     }
   }
 }
@@ -228,7 +240,14 @@ void setzeHerzen(int leben, float faktor) {
   herzen.setzePosition(mitteX(herzen.bildBreite), 20);
 }
 
+void setzePunkte(int neuePunkte, float faktor) {
+  punkte = new Punkte(faktor, neuePunkte);
+  punkte.setzePositionStelle1(width - punkte.bildBreiteStelle2 - 40, 20);
+  punkte.setzePositionStelle2(width - 50, 20);
+}
+
 void zuruecksetzen() {
+  punktzahl = 0;
   flappy.flappyX = startFlappyX;
   flappy.flappyY = startFlappyY;
   boden = new Boden();
